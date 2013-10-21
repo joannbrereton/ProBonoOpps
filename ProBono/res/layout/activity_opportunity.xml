@@ -1,0 +1,72 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <CheckBox
+        android:id="@+id/check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        android:focusableInTouchMode="false" >
+    </CheckBox>
+
+    <!-- TextView
+        android:id="@+id/client"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:autoLink="all"
+        android:text="@+string/Client" />
+
+    <TextView
+        android:id="@+id/city"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:autoLink="all"
+        android:text="@+string/city" />
+    
+    <TextView
+        android:id="@+id/state"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:autoLink="all"
+        android:text="@+string/state" />
+
+    <TextView
+        android:id="@+id/workRequired"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:autoLink="all"
+        android:text="@+string/workRequired" />
+
+    <TextView
+        android:id="@+id/mission"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:autoLink="all"
+        android:text="@+string/mission" />
+
+    <TextView
+        android:id="@+id/MatterNumber"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:autoLink="all"
+        android:text="@+string/matterNumber" />
+
+    <Checkbox
+        android:id="@+id/interested"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@+string/interested" /-->
+
+  
+        
+    <TextView 
+        android:id="@+id/allText" 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Opportunity goes here."/>
+    
+  
+
+</LinearLayout>

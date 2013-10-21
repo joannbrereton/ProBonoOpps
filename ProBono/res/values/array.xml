@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="category_names">
+        <item>*Select All*</item>
+        <item>Bankruptcy</item>
+        <item>Bylaw Review</item>
+        <item>Contracts</item>
+        <item>Corporate</item>
+        <item>Corporate Governance/Compliance</item>
+        <item>E-Commerce/Internet</item>
+        <item>Employment/Labor/Employee Benefits</item>
+        <item>Environmental/Land Use</item>
+        <item>HIPAA</item>
+        <item>Immigration</item>
+        <item>Incorporation/Tax Exemption</item>
+        <item>Insurance</item>
+        <item>Intellectual Property</item>
+        <item>Lending/Finance</item>
+        <item>Litigation</item>
+        <item>Nonprofit</item>
+        <item>Privacy</item>
+        <item>Real Estate</item>
+        <item>Tax</item>
+        <item>Trust and Estates</item>
+    </string-array>
+    <string-array name="category_values">
+        <item>#ALL#</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+    </string-array>
+    <string-array name="state_names">
+        <item>*Select All*</item>
+        <item>New York</item>
+        <item>New Jersey</item>
+        <item>Connecticut</item>
+    </string-array>
+    <string-array name="state_values">
+        <item>#ALL#</item>
+        <item>NY</item>
+        <item>NJ</item>
+        <item>CT</item>
+    </string-array>
+    
+    <string-array name="syncFrequency">
+        <item name="1">Once a day</item>
+        <item name="7">Once a week</item>
+        <item name="30">Once a month</item>
+        <item name="0">Never (No automatic notification of new opportunties)</item>
+    </string-array>
+    <string-array name="syncFrequencyValues">
+        <item name="1">1</item>
+        <item name="7">7</item>
+        <item name="30">30</item>
+        <item name="0">0</item>
+    </string-array>
+    
+</resources>

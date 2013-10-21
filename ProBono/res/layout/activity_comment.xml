@@ -1,0 +1,30 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/apk/res/android"
+    android:id="@+id/commentLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_alignParentBottom="true"
+    android:orientation="vertical">
+    
+   
+    <EditText
+        android:id="@+id/commentText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textMultiLine" 
+        android:lines="10"
+        >
+
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/btnComment"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/okAfterComment"
+        android:onClick="volunteer"
+         />
+
+</LinearLayout>

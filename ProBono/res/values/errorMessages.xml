@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--   
+    <string name="noResults">There are no opportunity results available matching the category(ies) or state(s) chosen. </string>
+    <string name="noCategoriesFound">No categories were returned from the opportunity service.</string>
+    <string name="errorTryingToParseCategories">Error trying to parse categories.</string>
+    <string name="errorTryingtoParseOpportunities">Error trying to parse opportunities.</string>
+    <string name="errorTryingToGetCategoriesFromService">There was a problem with the service to read the opportunity categories.</string>
+    <string name="errorTryingToGetOpportunitiesFromService">There was a problem with the service to read the opportunities.</string>
+    <string name="errorNoItemList">Error getting category item list.</string>
+   -->
+</resources>

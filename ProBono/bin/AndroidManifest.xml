@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.jpb.probono"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="15"
+        android:targetSdkVersion="18" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/pbp1"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.jpb.probono.HomeActivity"
+            android:label="@string/title_activity_home" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.jpb.probono.CategoryListActivity"
+            android:label="@string/title_activity_main" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.jpb.probono.HomeActivity" />
+        </activity>
+        <activity
+            android:name="com.jpb.probono.OpportunityListActivity"
+            android:label="@string/title_activity_opplist" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.jpb.probono.ProBonoCategoryListActivity" />
+        </activity>
+        <activity
+            android:name="com.jpb.probono.OpportunityActivity"
+            android:label="@string/title_activity_opportunity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.jpb.probono.CategoryActivity" />
+        </activity>
+        <activity
+            android:name="com.jpb.probono.ProBonoPreferencesActivity"
+            android:label="Preferences" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.jpb.probono.HomeActivity" />
+        </activity>
+        <activity
+            android:name="com.jpb.probono.CommentActivity"
+            android:label="@string/title_activity_comment" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.jpb.probono.OpportunityListActivity"/>
+        </activity>
+
+        <!-- Services -->
+        <service android:name="com.jpb.probono.service.CategoryListService" >
+        </service>
+        <service android:name="com.jpb.probono.service.OpportunityListService" >
+        </service>
+        <service android:name="com.jpb.probono.service.MailService" >
+        </service>
+
+        <!-- Broadcast Receiver - run once a day, puts up notification on new opps -->
+
+        <receiver android:name="com.jpb.probono.service.PushSubscribedOpportunityStartupBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        
+        <!-- Repeating Broadcast Receiver -->
+        <receiver android:name="com.jpb.probono.service.PushSubscribedOpportunityRepeatingBroadcastReceiver" >
+        </receiver>
+
+        
+    </application>
+
+</manifest>
