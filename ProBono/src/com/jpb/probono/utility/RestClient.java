@@ -137,6 +137,11 @@ public class RestClient {
 			e.printStackTrace();
 		}
 	}
+	
+	public String toString()
+	{
+		return "Client setup: " + "url = " + this.url + " params = " + this.params + " headers = " + this.headers;
+	}
 
 	private static String convertStreamToString(InputStream is) {
 

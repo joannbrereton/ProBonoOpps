@@ -76,6 +76,10 @@ public class MailService extends IntentService {
 			client.AddParam(Constants.KEY_USER_SUM,Constants.ROBOT_CONSTANT);
 			client.AddParam(Constants.KEY_SUBMIT, Constants.SUBMIT_WORD);
 			
+			// Hardcoded at the moment....need these values!!!
+			client.AddParam("Opp", "1612");
+			client.AddParam("Opp", "1611");
+			
 			PBLogger.i(TAG, "About to post.");
 			client.Execute(RequestMethod.POST);
 			responseString = client.getResponse();

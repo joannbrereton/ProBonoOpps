@@ -1,6 +1,8 @@
 package com.jpb.probono;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -81,7 +83,8 @@ public class HomeActivity extends Activity {
 						resources
 								.getString(R.string.errorTryingToGetCategoriesFromService),
 						Toast.LENGTH_LONG).show();
-				PBLogger.e(TAG,
+				PBLogger.e(
+						TAG,
 						resources
 								.getString(R.string.errorTryingToGetCategoriesFromService));
 
@@ -112,10 +115,9 @@ public class HomeActivity extends Activity {
 		String TAG = className + "onOptionsItemSelected";
 		PBLogger.entry(TAG);
 		Intent settingsActivity = new Intent(getBaseContext(),
-				ProBonoPreferencesActivity.class);
-		PBLogger.i(TAG,
-				"Setting Preferences Activity - settingsActivity = "
-						+ settingsActivity);
+				SettingsActivity.class);
+		PBLogger.i(TAG, "Setting Preferences Activity - settingsActivity = "
+				+ settingsActivity);
 		startActivity(settingsActivity);
 		PBLogger.exit(TAG);
 		return true;
@@ -134,6 +136,7 @@ public class HomeActivity extends Activity {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	public void doBrowseByPref(View v) {
 		String methodName = ".doBrowseByPref";
 		String TAG = className + methodName;
@@ -141,37 +144,36 @@ public class HomeActivity extends Activity {
 
 		SharedPreferences preferences = PreferenceManager
 				.getDefaultSharedPreferences(this);
-
-		String states = preferences.getString(
-				resources.getString(R.string.preferredStatesKey),
-				resources.getString(R.string.defaultStates));
-		String cats = preferences.getString(
-				resources.getString(R.string.preferredCategoriesKey),
-				resources.getString(R.string.defaultCategories));
+		
+		HashMap<String,?> prefMap =(HashMap<String,?>)preferences.getAll();
+			
+		HashSet<String> cats = (HashSet<String>)prefMap.get(Constants.PREFERRED_CATEGORIES);
+		HashSet<String> states = (HashSet<String>)prefMap.get(Constants.PREFERRED_STATES);
+		
+		
 		PBLogger.i(TAG, "states = " + states + " cats = " + cats);
 
-		if ((states == null || states.equals(""))
-				&& (cats == null || cats.equals(""))) {
+		if ((states == null) || (cats == null)) {
 			Toast.makeText(this, resources.getString(R.string.noSubscribed),
 					Toast.LENGTH_LONG).show();
 			PBLogger.exit(TAG);
-			return;
+
+		} else {
+
+			// Getting ready to call opportunities REST service...
+
+			OpportunityQueryParameterList listQueryParms = OpportunityListHelper
+					.buildParameterList(v.getContext(), cats, states, false);
+
+			Intent oppListIntent = new Intent(this,
+					OpportunityListActivity.class);
+			oppListIntent.putExtra(Constants.LIST_QUERY_PARMS, listQueryParms);
+			updateLastUsage();
+
+			startActivity(oppListIntent);
+
+			PBLogger.exit(TAG);
 		}
-
-		// Getting ready to call opportunities REST service...
-		
-
-		OpportunityQueryParameterList listQueryParms = OpportunityListHelper.buildParameterList(v.getContext(),false);
-				
-		Intent oppListIntent = new Intent(this, OpportunityListActivity.class);
-		oppListIntent.putExtra(Constants.LIST_QUERY_PARMS, listQueryParms);
-	    updateLastUsage();
-
-		startActivity(oppListIntent);
-		
-
-		PBLogger.exit(TAG);
-
 	}
 
 	// Update the timestamp for the last usage of the query.
@@ -181,11 +183,13 @@ public class HomeActivity extends Activity {
 				.getDefaultSharedPreferences(this);
 		SharedPreferences.Editor editor = preferences.edit();
 		editor.putLong(Constants.lastUsage, System.currentTimeMillis());
-		//Note: Preference has to be stored as Long, but we format it as String in the query (from PushSubscribed...).
+		// Note: Preference has to be stored as Long, but we format it as String
+		// in the query (from PushSubscribed...).
 
-		PBLogger.i(TAG,"Last usage time updated to: " + System.currentTimeMillis() );
+		PBLogger.i(TAG,
+				"Last usage time updated to: " + System.currentTimeMillis());
 		editor.commit();
-		
+
 	}
 
 }

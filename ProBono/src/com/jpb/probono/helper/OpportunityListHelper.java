@@ -3,8 +3,8 @@ package com.jpb.probono.helper;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Locale;
-import java.util.StringTokenizer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -87,13 +87,12 @@ public class OpportunityListHelper {
 		return newJsonResponse;
 	}
 	
-	public static OpportunityQueryParameterList buildParameterList(Context context, boolean useSince) {
+	public static OpportunityQueryParameterList buildParameterList(Context context, HashSet<String> cats, HashSet<String> states,  boolean useSince) {
 		String TAG = className + ".buildParameterList";
 		Log.i(TAG, "entry");
 		SharedPreferences preferences = PreferenceManager
 				.getDefaultSharedPreferences(context);
-		Resources resources = context.getResources();
-
+		
 		//Note: Preference has to be stored as Long, but we format it as String in the query.
 		Long sinceLong = Constants.BEGINNING_OF_TIME;
 		if (useSince)
@@ -104,12 +103,7 @@ public class OpportunityListHelper {
 		
 		String updatedSince = formatUpdatedSince(new Date(sinceLong));
 
-		String states = preferences.getString(
-				resources.getString(R.string.preferredStatesKey),
-				resources.getString(R.string.defaultStates));
-		String cats = preferences.getString(
-				resources.getString(R.string.preferredCategoriesKey),
-				resources.getString(R.string.defaultCategories));
+		
 
 		Log.i(TAG, "states = " + states + " cats = " + cats);
 
@@ -119,15 +113,14 @@ public class OpportunityListHelper {
 		
 		listQueryParms.setSince(updatedSince);
 		
-		StringTokenizer st = new StringTokenizer(states,
-				Constants.PARAMETER_SEPARATOR);
-		while (st.hasMoreTokens()) {
-			listQueryParms.addState(st.nextToken()); // don't need name for now
+		
+		for (String state : states) {
+			listQueryParms.addState(state); // don't need name for now
 		}
-		st = null;
-		st = new StringTokenizer(cats, Constants.PARAMETER_SEPARATOR);
-		while (st.hasMoreTokens()) {
-			listQueryParms.addCategory(st.nextToken()); // don't need name for
+
+		
+		for (String cat : cats) {
+			listQueryParms.addCategory(cat); // don't need name for
 														// now
 		}
 		Log.i(TAG,"returning listQueryParms = " + listQueryParms);

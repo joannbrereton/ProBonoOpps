@@ -105,7 +105,7 @@ public class CategoryListActivity extends Activity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		String TAG = className + ".onOptionsItemSelected";
 		Intent settingsActivity = new Intent(getBaseContext(),
-				ProBonoPreferencesActivity.class);
+				SettingsActivity.class);
 		PBLogger.i(TAG,
 				"Setting Preferences Activity - settingsActivity = "
 						+ settingsActivity);

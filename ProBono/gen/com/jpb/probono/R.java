@@ -11,10 +11,11 @@ public final class R {
     public static final class array {
         public static final int category_names=0x7f050000;
         public static final int category_values=0x7f050001;
+        public static final int empty_array=0x7f050004;
         public static final int state_names=0x7f050002;
         public static final int state_values=0x7f050003;
-        public static final int syncFrequency=0x7f050004;
-        public static final int syncFrequencyValues=0x7f050005;
+        public static final int syncFrequency=0x7f050005;
+        public static final int syncFrequencyValues=0x7f050006;
     }
     public static final class attr {
         /** <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
@@ -137,6 +138,7 @@ containing a value of this type.
         public static final int okAfterComment=0x7f070019;
         public static final int opportunities=0x7f070006;
         public static final int opportunity=0x7f07000a;
+        public static final int pref_header_general=0x7f070059;
         public static final int pref_sync_frequency=0x7f070036;
         public static final int pref_sync_frequency_summary=0x7f070037;
         public static final int preferredCategories=0x7f070032;
@@ -176,7 +178,8 @@ containing a value of this type.
         public static final int AppTheme=0x7f080000;
     }
     public static final class xml {
-        public static final int preferences=0x7f040000;
+        public static final int pref_headers=0x7f040000;
+        public static final int preferences=0x7f040001;
     }
     public static final class styleable {
         /** Attributes that can be used with a ListPreferenceMultiSelect.

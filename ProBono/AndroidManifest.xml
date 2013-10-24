@@ -47,7 +47,7 @@
                 android:value="com.jpb.probono.CategoryActivity" />
         </activity>
         <activity
-            android:name="com.jpb.probono.ProBonoPreferencesActivity"
+            android:name="com.jpb.probono.SettingsActivity"
             android:label="Preferences" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

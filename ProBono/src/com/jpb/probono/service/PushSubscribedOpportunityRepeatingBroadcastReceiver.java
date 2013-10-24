@@ -1,5 +1,8 @@
 package com.jpb.probono.service;
 
+import java.util.HashMap;
+import java.util.HashSet;
+
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -7,10 +10,12 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
+import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.jpb.probono.HomeActivity;
@@ -68,6 +73,7 @@ public class PushSubscribedOpportunityRepeatingBroadcastReceiver extends
 
 	};
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		String TAG = className + ".onReceive";
@@ -81,8 +87,17 @@ public class PushSubscribedOpportunityRepeatingBroadcastReceiver extends
 		// result comes back to handler
 		Messenger messenger = new Messenger(oppsHandler);
 		service.putExtra(Constants.MESSENGER, messenger);
+		
+		SharedPreferences preferences = PreferenceManager
+				.getDefaultSharedPreferences(context);
+		
+		HashMap<String,?> prefMap =(HashMap<String,?>)preferences.getAll();
+			
+		HashSet<String> cats = (HashSet<String>)prefMap.get(Constants.PREFERRED_CATEGORIES);
+		HashSet<String> states = (HashSet<String>)prefMap.get(Constants.PREFERRED_STATES);
+
 		OpportunityQueryParameterList parameterList = OpportunityListHelper
-				.buildParameterList(this.context,true);
+				.buildParameterList(this.context,cats, states, true);
 		if (parameterList.getCategories() == null
 				|| parameterList.getCategories().equals("")
 				|| parameterList.getStates() == null

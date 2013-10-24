@@ -43,8 +43,7 @@ public class OpportunityListService extends IntentService {
 		PBLogger.entry(TAG);
 		resources = getResources();
 		OpportunityQueryParameterList queryParms= intent.getExtras().getParcelable(Constants.LIST_QUERY_PARMS);
-	
-
+		PBLogger.i(TAG, queryParms.toString());
 		// Call web service to get opportunities, pass along parameters. 
 		// 
 		task = new CallGetOpportunityListWebServiceTask();
@@ -170,7 +169,7 @@ public class OpportunityListService extends IntentService {
 		client.AddHeader(Constants.ACCEPTS, Constants.APPLICATION_JSON);
 
 		try {
-			PBLogger.i(TAG,"Calling REST Service.");
+			PBLogger.i(TAG,"Calling REST Service."+ client.toString());
 			client.Execute(RequestMethod.GET);
 			responseString = client.getResponse();
 			PBLogger.i(TAG,"Response acquired from REST Service");

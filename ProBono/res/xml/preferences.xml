@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-                   xmlns:jpb="http://schemas.android.com/apk/res/com.jpb.probono" >
-
-    <PreferenceCategory android:title="@string/userProfilePreferences" >
+    xmlns:jpb="http://schemas.android.com/apk/res/com.jpb.probono" >
+ <PreferenceCategory android:title="@string/userProfilePreferences" >
         <EditTextPreference
             android:defaultValue=""
             android:dialogTitle="@string/dialog_title_FirstName_preference"
@@ -21,7 +20,7 @@
             android:key="email_preference"
             android:summary="@string/summary_email_preference"
             android:title="@string/title_email_preference" />
-         <EditTextPreference
+        <EditTextPreference
             android:defaultValue=""
             android:dialogTitle="@string/dialog_title_firm_preference"
             android:key="firm_preference"
@@ -34,33 +33,32 @@
             android:summary="@string/summary_telephone_number_preference"
             android:title="@string/title_telephone_number_preference" />
     </PreferenceCategory>
+    
     <PreferenceCategory android:title="@string/userQueryPreferences" >
-        <com.jpb.probono.preference.ListPreferenceMultiSelect
-            jpb:checkAll="#ALL#" 
-            android:defaultValue="#ALL#"
-            android:dialogTitle="@string/preferredCategories"
-            android:entries="@array/category_names"
-            android:entryValues="@array/category_values"
-            android:key="preferredCategories"
-            android:summary="@string/promptForPreferredCategories"
-            android:title="@string/preferredCategories" />
-        <com.jpb.probono.preference.ListPreferenceMultiSelect
-            jpb:checkAll="#ALL#"
-            android:defaultValue="#ALL#"
-            android:dialogTitle="@string/preferredStates"
-            android:entries="@array/state_names"
-            android:entryValues="@array/state_values"
-            android:key="preferredStates"
-            android:summary="@string/promptForPreferredStates"
-            android:title="@string/preferredStates" />
+		<MultiSelectListPreference
+        	android:title="@string/preferredCategories"
+        	android:entries="@array/category_names"
+        	android:entryValues="@array/category_values"
+        	android:key="preferredCategories"
+           
+        />
+       <MultiSelectListPreference
+        	android:title="@string/preferredStates"
+        	android:entries="@array/state_names"
+        	android:entryValues="@array/state_values"
+        	android:key="preferredStates"
+        />
+       
+        
     </PreferenceCategory>
+    
     <PreferenceCategory android:title="@string/userPushPreferences" >
         <ListPreference
-            android:key="prefSyncFrequency"
             android:entries="@array/syncFrequency"
-            android:summary="@string/pref_sync_frequency_summary"
             android:entryValues="@array/syncFrequencyValues"
+            android:key="prefSyncFrequency"
             android:title="@string/pref_sync_frequency" />
-    </PreferenceCategory>
+    </PreferenceCategory>    
+        
 
 </PreferenceScreen>

@@ -108,8 +108,9 @@ public class ListPreferenceMultiSelect extends ListPreference {
 
 	public String getValuesAsString() {
 		StringBuffer sb = new StringBuffer("");
+		
 		for (int i = 0; i < this.mClickedDialogEntryIndices.length; i++) {
-			if (this.mClickedDialogEntryIndices[i]) {
+			if (this.mClickedDialogEntryIndices[i] ) {
 				if (!this.isCheckAllValue(i))
 					sb.append(this.getEntries()[i]).append(
 							Constants.PARAMETER_SEPARATOR);
@@ -146,7 +147,7 @@ public class ListPreferenceMultiSelect extends ListPreference {
 			// String val = vals[j].trim();
 			for (int i = 0; i < entryValues.length; i++) {
 				CharSequence entry = entryValues[i];
-				if (valuesList.contains(entry)) {
+				if (valuesList.contains(entry) || valuesList.contains(Constants.MULTISELECT_SELECT_ALL)) {
 					mClickedDialogEntryIndices[i] = true;
 				}
 			}

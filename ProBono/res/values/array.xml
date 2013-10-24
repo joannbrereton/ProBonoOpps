@@ -2,7 +2,6 @@
 <resources>
 
     <string-array name="category_names">
-        <item>*Select All*</item>
         <item>Bankruptcy</item>
         <item>Bylaw Review</item>
         <item>Contracts</item>
@@ -25,7 +24,6 @@
         <item>Trust and Estates</item>
     </string-array>
     <string-array name="category_values">
-        <item>#ALL#</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>
@@ -48,17 +46,17 @@
         <item>20</item>
     </string-array>
     <string-array name="state_names">
-        <item>*Select All*</item>
         <item>New York</item>
         <item>New Jersey</item>
         <item>Connecticut</item>
     </string-array>
     <string-array name="state_values">
-        <item>#ALL#</item>
         <item>NY</item>
         <item>NJ</item>
         <item>CT</item>
     </string-array>
+    
+    <string-array name="empty_array"></string-array>
     
     <string-array name="syncFrequency">
         <item name="1">Once a day</item>
