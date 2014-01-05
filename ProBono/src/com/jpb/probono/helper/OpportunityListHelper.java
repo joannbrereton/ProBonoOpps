@@ -47,6 +47,7 @@ public class OpportunityListHelper {
 					opp.setState(jsonObj.getString(Constants.STATE));
 					opp.setLegalWorkRequired(jsonObj
 							.getString(Constants.LEGAL_WORK_REQUIRED));
+					opp.setOppId(jsonObj.getString(Constants.OPPID));
 
 					oppsList.add(opp);
 				}

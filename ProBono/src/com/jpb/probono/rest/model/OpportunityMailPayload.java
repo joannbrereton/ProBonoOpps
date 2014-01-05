@@ -1,5 +1,7 @@
 package com.jpb.probono.rest.model;
 
+import java.util.ArrayList;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
@@ -7,7 +9,7 @@ import android.util.Log;
 public class OpportunityMailPayload implements Parcelable {
 	ContactInfo contact;
 	String      comment;
-	String      listOfOpps;
+	ArrayList<Opportunity>      listOfOpps;
 	
 	public OpportunityMailPayload()
 	{
@@ -22,10 +24,10 @@ public class OpportunityMailPayload implements Parcelable {
 	}
 	
 	
-	public String getListOfOpps() {
+	public ArrayList<Opportunity> getListOfOpps() {
 		return listOfOpps;
 	}
-	public void setListOfOpps(String listOfOpps) {
+	public void setListOfOpps(ArrayList<Opportunity> listOfOpps) {
 		this.listOfOpps = listOfOpps;
 	}
 	public ContactInfo getContact() {
@@ -50,7 +52,7 @@ public class OpportunityMailPayload implements Parcelable {
 		Log.i("OpportunityMailPayload.writeToParcel","Entry");
 		dest.writeSerializable(contact);
 		dest.writeString(comment);
-		dest.writeString(listOfOpps);
+		dest.writeTypedList(listOfOpps);
 		Log.i("OpportunityMailPayload.writeToParcel","Exit");
 
 	}
@@ -67,8 +69,12 @@ public class OpportunityMailPayload implements Parcelable {
 	};
 	
 	private void readFromParcel(Parcel parcel) {
+		Log.i("OpportunityMailPayload.readFromParcel","Entry");
 	    contact = (ContactInfo)parcel.readSerializable();
 	    comment = parcel.readString();
-	    listOfOpps = parcel.readString();
+	    listOfOpps = new ArrayList<Opportunity>();
+	    parcel.readTypedList(listOfOpps,Opportunity.CREATOR);
+		Log.i("OpportunityMailPayload.readFromParcel","Exit");
+
 	}
 }

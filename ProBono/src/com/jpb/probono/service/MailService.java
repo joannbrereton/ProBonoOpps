@@ -1,5 +1,7 @@
 package com.jpb.probono.service;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.app.IntentService;
 import android.content.Intent;
@@ -14,6 +16,7 @@ import com.jpb.probono.R;
 import com.jpb.probono.constants.Constants;
 import com.jpb.probono.exception.PBException;
 import com.jpb.probono.rest.model.ContactInfo;
+import com.jpb.probono.rest.model.Opportunity;
 import com.jpb.probono.rest.model.OpportunityMailPayload;
 import com.jpb.probono.utility.PBLogger;
 import com.jpb.probono.utility.RestClient;
@@ -53,9 +56,6 @@ public class MailService extends IntentService {
 		String TAG = className + ".doMail";
 		PBLogger.entry(TAG);
 		String responseString = null;
-		
-		
-
 		String endpoint = resources.getString(R.string.mailerEndpoint);
 
 		RestClient client = new RestClient(endpoint);
@@ -76,10 +76,14 @@ public class MailService extends IntentService {
 			client.AddParam(Constants.KEY_USER_SUM,Constants.ROBOT_CONSTANT);
 			client.AddParam(Constants.KEY_SUBMIT, Constants.SUBMIT_WORD);
 			
-			// Hardcoded at the moment....need these values!!!
-			client.AddParam("Opp", "1612");
-			client.AddParam("Opp", "1611");
+			List<Opportunity> oppList = mailPayload.getListOfOpps();
 			
+			for (Opportunity opp : oppList)
+			{
+			// Hardcoded at the moment....need these values!!!
+				client.AddParam("Opp", opp.getOppId());
+				client.AddParam("Opp", opp.getOppId());
+			}
 			PBLogger.i(TAG, "About to post.");
 			client.Execute(RequestMethod.POST);
 			responseString = client.getResponse();

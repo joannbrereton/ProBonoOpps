@@ -70,7 +70,7 @@ public class CommentActivity extends Activity {
 				ContactInfo contact = getContactInfoFromPreferences();
 				if (contact.isValid()) {
 				
-					mailParams.setListOfOpps(opps.toString());
+					mailParams.setListOfOpps(opps);
 					mailParams.setContact(contact);					
 					mailParams.setComment(commentText.getText().toString());
 					mailIntent.putExtra(Constants.MAIL_PARAMS, mailParams);

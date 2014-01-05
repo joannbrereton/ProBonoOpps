@@ -2,6 +2,7 @@ package com.jpb.probono.rest.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 /**
  * The persistent class for the OPPORTUNITY database table.
@@ -19,6 +20,7 @@ public class Opportunity implements Parcelable {
 	private String mission;
 	private String matterNo; // actual key.
 	private String legalWorkRequired;
+	private String oppId;
 	
 	private long date;
 	
@@ -39,9 +41,10 @@ public class Opportunity implements Parcelable {
 	public Opportunity() {
 	}
 
-	public Opportunity(String matterno, Boolean activeFlag, int categoryId, 
+	public Opportunity(String oppId, String matterno, Boolean activeFlag, int categoryId, 
 			String categoryName, String legalWorkRequired,
 			String client, String city, String state, String mission) {
+		this.oppId = oppId;
 		this.matterNo = matterno;
 		this.activeflag = activeFlag;
 		this.categoryId = categoryId;
@@ -139,24 +142,34 @@ public class Opportunity implements Parcelable {
 		this.categoryName = categoryName;
 	}
 
+	public String getOppId() {
+		return oppId;
+	}
+
+	public void setOppId(String oppId) {
+		this.oppId = oppId;
+	}
 	
 	// Parcelable methods.
 	
 		public Opportunity(Parcel parcel)
-		{			
+		{		
+			Log.i("Opportunity.<initFromParcel>","Entry");
+
+			this.setOppId(parcel.readString());
 			this.setCategoryId(parcel.readInt());
 			this.setCategoryName(parcel.readString());
 			this.setMatterNo(parcel.readString());
-	//		this.setCategoryName(parcel.readString());
 			this.setCity(parcel.readString());
 			this.setClient(parcel.readString());
 			this.setLegalWorkRequired(parcel.readString());
 			this.setMission(parcel.readString());
 			this.setState(parcel.readString());
-	//		this.setActiveflag(Boolean.parseBoolean(parcel.readString()));
 			this.setDate(parcel.readLong());
+			Log.i("Opportunity.<initFromParcel>","Exit");
 		
 		}
+		
 
 		@Override
 		public int describeContents() {
@@ -166,17 +179,18 @@ public class Opportunity implements Parcelable {
 
 		@Override
 		public void writeToParcel(Parcel dest, int flags) {
+			Log.i("Opportunity.writeToParcel","Entry");
+			dest.writeString(this.getOppId());
 			dest.writeInt(this.getCategoryId());
-		//	dest.writeString(this.getCategoryName());
-			dest.writeString(this.getMatterNo());
 			dest.writeString(this.getCategoryName());
+			dest.writeString(this.getMatterNo());
 			dest.writeString(this.getCity());
 			dest.writeString(this.getClient());
 			dest.writeString(this.getLegalWorkRequired());
 			dest.writeString(this.getMission());
 			dest.writeString(this.getState());
-		//	dest.writeString(this.getActiveflag().toString());
 			dest.writeLong(this.getDate());
+			Log.i("Opportunity.writeToParcel","Exit");
 		
 		}
 		
@@ -191,15 +205,20 @@ public class Opportunity implements Parcelable {
 		      }
 		};
 
+		
 	
 	public String toString()
 	{
-		return "MatterNo: " + this.matterNo + "\n" +
+		return "OppId: " + this.oppId + "\n" +
+			   "MatterNo: " + this.matterNo + "\n" +
+		       "Opportunity Id: " + this.oppId  + "\n" +
 	           "Client: " + this.client + "\n" +
 			   "City: "  + this.city + "\n" +
 	           "State: "  + this.state + "\n" +
 			   "Mission:" + this.mission + "\n" +
 	           "Work Required: " + this.legalWorkRequired +"\n";
 	}
+
+
 	
 }

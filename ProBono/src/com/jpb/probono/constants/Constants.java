@@ -34,7 +34,7 @@ public class Constants {
 	
 	public static final String OPPORTUNITY = "Opportunity";
 	
-	
+	public static final String OPPID = "Opp:";
 	public final static String CITY = "City";
 	public final static String STATE = "State";
 	public final static String CLIENT = "Client";
