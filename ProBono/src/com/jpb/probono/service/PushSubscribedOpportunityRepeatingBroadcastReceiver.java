@@ -1,5 +1,6 @@
 package com.jpb.probono.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -21,7 +22,9 @@ import android.widget.Toast;
 import com.jpb.probono.HomeActivity;
 import com.jpb.probono.R;
 import com.jpb.probono.constants.Constants;
+import com.jpb.probono.exception.PBException;
 import com.jpb.probono.helper.OpportunityListHelper;
+import com.jpb.probono.rest.model.Opportunity;
 import com.jpb.probono.rest.model.OpportunityQueryParameterList;
 import com.jpb.probono.utility.PBLogger;
 
@@ -31,39 +34,33 @@ public class PushSubscribedOpportunityRepeatingBroadcastReceiver extends
 
 	private static Resources resources = null;
 	private Context context = null;
-	private static String className = "PushSubscribedOpportunityRepeatingBroadcastReceiver";
+	private static String className = "OpportunityRepeatingBroadcastReceiver";
 	private Handler oppsHandler = new Handler() {
-		@SuppressWarnings("deprecation")
 		public void handleMessage(Message message) {
 			String TAG = className + ".handleMessage";
 			PBLogger.entry(TAG);
 			String json = (String) message.obj;
-			Context context = PushSubscribedOpportunityRepeatingBroadcastReceiver.this.context;
-			if (message.arg1 == android.app.Activity.RESULT_OK && json != null) {
-				PBLogger.i(TAG, "There are new opportunities found" + json);
-				Intent i = new Intent(
-						PushSubscribedOpportunityRepeatingBroadcastReceiver.this.context,
-						HomeActivity.class);
-				PendingIntent pIntent = PendingIntent
-						.getActivity(
-								PushSubscribedOpportunityRepeatingBroadcastReceiver.this.context,
-								0, i, PendingIntent.FLAG_CANCEL_CURRENT);
-				// Send a notification
-				NotificationManager mgr = (NotificationManager) context
-						.getSystemService(Context.NOTIFICATION_SERVICE);
-				Notification notification = new Notification(
-						R.drawable.pbp1,
-						resources.getString(R.string.notification_title),
-						System.currentTimeMillis());
-				// Set the Notification Info
-				notification.setLatestEventInfo(context,
-						resources.getString(R.string.notification_title),
-						resources.getString(R.string.notification_text),
-						pIntent);
-				notification.flags |= Notification.FLAG_AUTO_CANCEL;
-				mgr.notify(0, notification);
-				PBLogger.i(TAG, "Notification sent.");
-
+			
+			// Something comes back from the Find Opportunities service...
+			if (message.arg1 != android.app.Activity.RESULT_OK) {
+				// bad return value, log it. 
+				PBLogger.e(TAG, "A repeat broadcast call to opportunity finder has failed, returning " + message.arg1);
+			}
+			else if (json != null ) {
+				 // parse the json to determine if there are actual opportunities listed.
+				 // Note: resources has been set in the onReceive.
+				ArrayList<Opportunity> opps = null;
+				try {
+					opps = OpportunityListHelper.parseOpportunityList(resources, json);
+					PBLogger.i(TAG, "returned " + opps.size() + "opportunities");
+				} catch (PBException e) {
+					PBLogger.e(TAG,"Error parsing opportunities, resources = " + resources + ",  json = " + json);
+					e.printStackTrace();
+				}
+				
+				if (opps!= null && opps.size() > 0) {
+					notifyUserOfNewOpportunities();
+				}
 			} else {
 				PBLogger.i(TAG, "No results since last service call.");
 			}
@@ -72,6 +69,36 @@ public class PushSubscribedOpportunityRepeatingBroadcastReceiver extends
 		}
 
 	};
+	
+	@SuppressWarnings("deprecation")
+	private void notifyUserOfNewOpportunities()
+	{
+		String TAG = className + ".notifyUserOfNewOpportunities";
+
+		PBLogger.i(TAG, "There are new opportunities found");
+		Intent i = new Intent(
+				PushSubscribedOpportunityRepeatingBroadcastReceiver.this.context,
+				HomeActivity.class);
+			PendingIntent pIntent = PendingIntent
+				.getActivity(
+						PushSubscribedOpportunityRepeatingBroadcastReceiver.this.context,
+						0, i, PendingIntent.FLAG_CANCEL_CURRENT);
+			// Send a notification
+			NotificationManager mgr = (NotificationManager) context
+				.getSystemService(Context.NOTIFICATION_SERVICE);
+			Notification notification = new Notification(
+				R.drawable.pbp1,
+				resources.getString(R.string.notification_title),
+				System.currentTimeMillis());
+			// Set the Notification Info
+			notification.setLatestEventInfo(context,
+				resources.getString(R.string.notification_title),
+				resources.getString(R.string.notification_text),
+				pIntent);
+			notification.flags |= Notification.FLAG_AUTO_CANCEL;
+			mgr.notify(0, notification);
+			PBLogger.i(TAG, "Notification sent.");
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -95,6 +122,8 @@ public class PushSubscribedOpportunityRepeatingBroadcastReceiver extends
 			
 		HashSet<String> cats = (HashSet<String>)prefMap.get(Constants.PREFERRED_CATEGORIES);
 		HashSet<String> states = (HashSet<String>)prefMap.get(Constants.PREFERRED_STATES);
+		
+		PBLogger.i(TAG, "cats = " + cats + " states = " + states);
 
 		OpportunityQueryParameterList parameterList = OpportunityListHelper
 				.buildParameterList(this.context,cats, states, true);
@@ -103,13 +132,14 @@ public class PushSubscribedOpportunityRepeatingBroadcastReceiver extends
 				|| parameterList.getStates() == null
 				|| parameterList.getStates().equals("")) {
 
+			PBLogger.i(TAG, resources.getString(R.string.noSubscribed));
 			Toast.makeText(context, resources.getString(R.string.noSubscribed),
 					Toast.LENGTH_LONG).show();
 			return;
 
 		}
 		service.putExtra(Constants.LIST_QUERY_PARMS, parameterList);
-		PBLogger.i(TAG, "About to start service");
+		PBLogger.i(TAG, "About to start service with parameterList =" + parameterList);
 
 		context.startService(service);
 		PBLogger.exit(TAG);

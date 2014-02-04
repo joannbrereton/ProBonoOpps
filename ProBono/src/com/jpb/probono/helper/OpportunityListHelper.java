@@ -22,6 +22,7 @@ import com.jpb.probono.constants.Constants;
 import com.jpb.probono.exception.PBException;
 import com.jpb.probono.rest.model.Opportunity;
 import com.jpb.probono.rest.model.OpportunityQueryParameterList;
+import com.jpb.probono.utility.PBLogger;
 
 public class OpportunityListHelper {
 	private static final String className = "OpportunityListHelper";
@@ -54,7 +55,7 @@ public class OpportunityListHelper {
 
 			} catch (JSONException e) {
 				e.printStackTrace();
-				Log.e("getOpportunities", resources
+				PBLogger.e("getOpportunities", resources
 						.getString(R.string.errorTryingtoParseOpportunities), e);
 				throw new PBException(
 						resources
@@ -62,7 +63,7 @@ public class OpportunityListHelper {
 						e);
 			} catch (NotFoundException e) {
 				e.printStackTrace();
-				Log.e("getOpportunities", resources
+				PBLogger.e("getOpportunities", resources
 						.getString(R.string.errorTryingtoParseOpportunities), e);
 				throw new PBException(
 						resources
@@ -78,19 +79,19 @@ public class OpportunityListHelper {
 	// don't need anyway.
 	private static String cleanUpJsonResponse(String jsonResponse)
 	{
-		Log.i("OpportunityListHelper.cleanUpJsonResponse",jsonResponse);
+		PBLogger.i("OpportunityListHelper.cleanUpJsonResponse",jsonResponse);
 		
 		String newJsonResponse = jsonResponse;
 	//	Pattern htmlRegExp =  Pattern.compile(Constants.HTML_REGEXP);
 		newJsonResponse = newJsonResponse.replaceAll(Constants.HTML_REGEXP, Constants.EMPTY);
 				
-		Log.i("OpportunityListHelper.cleanUpJsonResponse","returning " + jsonResponse);
+		PBLogger.i("OpportunityListHelper.cleanUpJsonResponse","returning " + jsonResponse);
 		return newJsonResponse;
 	}
 	
 	public static OpportunityQueryParameterList buildParameterList(Context context, HashSet<String> cats, HashSet<String> states,  boolean useSince) {
 		String TAG = className + ".buildParameterList";
-		Log.i(TAG, "entry");
+		PBLogger.i(TAG, "entry");
 		SharedPreferences preferences = PreferenceManager
 				.getDefaultSharedPreferences(context);
 		
@@ -100,13 +101,14 @@ public class OpportunityListHelper {
 		{
 		    sinceLong = preferences.getLong(Constants.lastUsage,
 				Constants.BEGINNING_OF_TIME);
+		    PBLogger.i(TAG, "sinceLong = " + sinceLong);
 		}
 		
 		String updatedSince = formatUpdatedSince(new Date(sinceLong));
 
 		
 
-		Log.i(TAG, "states = " + states + " cats = " + cats);
+		PBLogger.i(TAG, "states = " + states + " cats = " + cats);
 
 		// Getting ready to call opportunities REST service...
 
@@ -124,7 +126,7 @@ public class OpportunityListHelper {
 			listQueryParms.addCategory(cat); // don't need name for
 														// now
 		}
-		Log.i(TAG,"returning listQueryParms = " + listQueryParms);
+		PBLogger.i(TAG,"returning listQueryParms = " + listQueryParms);
 		return listQueryParms;
 	}
 
@@ -133,7 +135,7 @@ public class OpportunityListHelper {
 		String updatedSince=null;
 		SimpleDateFormat format1 = new SimpleDateFormat(Constants.DATE_SINCE_FORMAT_PATTERN,Locale.US);          
 	    updatedSince = format1.format(date);
-	    Log.i(TAG,"input date = " + date + " output date = " + updatedSince);
+	    PBLogger.i(TAG,"input date = " + date + " output date = " + updatedSince);
 		
 		return updatedSince;
 	}

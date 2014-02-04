@@ -59,16 +59,16 @@
     <string-array name="empty_array"></string-array>
     
     <string-array name="syncFrequency">
-        <item name="1">Once a day</item>
-        <item name="7">Once a week</item>
-        <item name="30">Once a month</item>
-        <item name="0">Never (No automatic notification of new opportunties)</item>
+        <item>Once a day</item>
+        <item>Once a week</item>
+        <item>Once a month</item>
+        <item>Never (No automatic notification of new opportunities)</item>
     </string-array>
     <string-array name="syncFrequencyValues">
-        <item name="1">1</item>
-        <item name="7">7</item>
-        <item name="30">30</item>
-        <item name="0">0</item>
+        <item>1</item>
+        <item>7</item>
+        <item>30</item>
+        <item>0</item>
     </string-array>
     
 </resources>

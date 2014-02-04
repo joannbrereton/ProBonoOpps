@@ -28,19 +28,21 @@ import com.jpb.probono.utility.PBLogger;
 public class PushSubscribedOpportunityStartupBroadcastReceiver extends
 		BroadcastReceiver {
 	// Restart service every 30 seconds
-	public static final String className = "PushSubscribedOpportunityStartupBroadcastReceiver";
+	public static final String className = "OpportunityStartupBroadcastReceiver";
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		String TAG = className + ".onReceive";
 		PBLogger.entry(TAG);
 
-		// TODO: We should only set up the service if the user has indicated
+		// We should only set up the service if the user has indicated
 		// that they
 		// want to be periodically notified, within the Preferences.
 
 		if (isNotificationPreferred(context)) {
 			PBLogger.i(TAG,"isNotificationPreferred returned true." );
+			
+			int days = this.getNotificationIntervalDays(context);
 			AlarmManager service = (AlarmManager) context
 					.getSystemService(Context.ALARM_SERVICE);
 			Intent i = new Intent(context,
@@ -54,11 +56,12 @@ public class PushSubscribedOpportunityStartupBroadcastReceiver extends
 			// InexactRepeating allows Android to optimize the energy
 			// consumption
 			service.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-					cal.getTimeInMillis(), Constants.PUSH_REPEAT_TIME, pending);
+					cal.getTimeInMillis(), days * Constants.PUSH_REPEAT_TIME, pending);
 
 			// service.setRepeating(AlarmManager.RTC_WAKEUP,
 			// cal.getTimeInMillis(),
 			// REPEAT_TIME, pending);
+			PBLogger.i(TAG, "timer set ");
 		}
 		else
 		{
@@ -69,15 +72,38 @@ public class PushSubscribedOpportunityStartupBroadcastReceiver extends
 	}
 
 	private boolean isNotificationPreferred(Context context) {
+		String TAG = className + ".isNotificationPreferred";
+		PBLogger.entry(TAG);
+		boolean preferred = false;
 		SharedPreferences sharedPrefs = PreferenceManager
 				.getDefaultSharedPreferences(context);
 
-		String pref = sharedPrefs.getString(context.getResources().getString(R.string.pref_sync_frequency), "0");
+		String pref = sharedPrefs.getString(context.getResources().getString(R.string.pref_sync_frequency_key), "0");
+		PBLogger.i(TAG, "pref = " + pref);
 		if (pref.equals("0"))
-			return false;
+			preferred = false;
 		else
-			return true;
+			preferred = true;
+		
+		PBLogger.exit(TAG);
+		return preferred;
 
+	}
+	
+	private int getNotificationIntervalDays(Context context) {
+		String TAG = className + ".getNotificationIntervalDays";
+		PBLogger.entry(TAG);
+		int days = 0;
+		SharedPreferences sharedPrefs = PreferenceManager
+				.getDefaultSharedPreferences(context);
+
+		String sDays = sharedPrefs.getString(context.getResources().getString(R.string.pref_sync_frequency_key), "0");
+		PBLogger.i(TAG, "sDays = " + sDays);
+		days = Integer.parseInt(sDays);
+		PBLogger.i(TAG, "days = " + days);
+			
+		PBLogger.exit(TAG);
+		return days;	
 	}
 
 }

@@ -47,7 +47,7 @@ public class OpportunityListActivity extends Activity implements
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
 
-		// Get Category from parcelable.
+		// Get parameter List from parcelable.
 		Bundle b = getIntent().getExtras();
 		OpportunityQueryParameterList listQueryParms = b
 				.getParcelable(Constants.LIST_QUERY_PARMS);

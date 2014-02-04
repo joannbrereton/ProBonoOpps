@@ -23,6 +23,7 @@ import com.jpb.probono.constants.Constants;
 import com.jpb.probono.exception.PBException;
 import com.jpb.probono.helper.CategoriesListHelper;
 import com.jpb.probono.helper.OpportunityListHelper;
+import com.jpb.probono.rest.model.ContactInfo;
 import com.jpb.probono.rest.model.OpportunityCategory;
 import com.jpb.probono.rest.model.OpportunityQueryParameterList;
 import com.jpb.probono.service.CategoryListService;
@@ -127,11 +128,22 @@ public class HomeActivity extends Activity {
 		String methodName = ".AllCategoriesOnClickListener.onClick";
 		String TAG = className + methodName;
 		PBLogger.entry(TAG);
-		Intent categoryIntent = new Intent(this, CategoryListActivity.class);
 
-		categoryIntent.putExtra(Constants.CATEGORIES, cats);
+		// if Contact information is not yet set up, disable two
+		// home buttons and force user to fill in.
+		ContactInfo contactInfo = this.getContactInfoFromPreferences();
+		if (contactInfo.getEmail() == null || contactInfo.getEmail().isEmpty()) {
 
-		startActivity(categoryIntent);
+			Toast.makeText(HomeActivity.this,
+					resources.getString(R.string.noContactInfo),
+					Toast.LENGTH_LONG).show();
+		} else {
+
+			Intent categoryIntent = new Intent(this, CategoryListActivity.class);
+			categoryIntent.putExtra(Constants.CATEGORIES, cats);
+			updateLastUsage();
+			startActivity(categoryIntent);
+		}
 		PBLogger.exit(TAG);
 
 	}
@@ -141,38 +153,52 @@ public class HomeActivity extends Activity {
 		String methodName = ".doBrowseByPref";
 		String TAG = className + methodName;
 		PBLogger.i(TAG, "entry.");
+		// if Contact information is not yet set up, disable two
+		// home buttons and force user to fill in.
+		ContactInfo contactInfo = this.getContactInfoFromPreferences();
+		if (contactInfo.getEmail() == null || contactInfo.getEmail().isEmpty()) {
 
-		SharedPreferences preferences = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		
-		HashMap<String,?> prefMap =(HashMap<String,?>)preferences.getAll();
-			
-		HashSet<String> cats = (HashSet<String>)prefMap.get(Constants.PREFERRED_CATEGORIES);
-		HashSet<String> states = (HashSet<String>)prefMap.get(Constants.PREFERRED_STATES);
-		
-		
-		PBLogger.i(TAG, "states = " + states + " cats = " + cats);
-
-		if ((states == null) || (cats == null)) {
-			Toast.makeText(this, resources.getString(R.string.noSubscribed),
+			Toast.makeText(HomeActivity.this,
+					resources.getString(R.string.noContactInfo),
 					Toast.LENGTH_LONG).show();
-			PBLogger.exit(TAG);
-
 		} else {
 
-			// Getting ready to call opportunities REST service...
+			SharedPreferences preferences = PreferenceManager
+					.getDefaultSharedPreferences(this);
 
-			OpportunityQueryParameterList listQueryParms = OpportunityListHelper
-					.buildParameterList(v.getContext(), cats, states, false);
+			HashMap<String, ?> prefMap = (HashMap<String, ?>) preferences
+					.getAll();
 
-			Intent oppListIntent = new Intent(this,
-					OpportunityListActivity.class);
-			oppListIntent.putExtra(Constants.LIST_QUERY_PARMS, listQueryParms);
-			updateLastUsage();
+			HashSet<String> cats = (HashSet<String>) prefMap
+					.get(Constants.PREFERRED_CATEGORIES);
+			HashSet<String> states = (HashSet<String>) prefMap
+					.get(Constants.PREFERRED_STATES);
 
-			startActivity(oppListIntent);
+			PBLogger.i(TAG, "states = " + states + " cats = " + cats);
 
-			PBLogger.exit(TAG);
+			if ((states == null) || (cats == null)) {
+				Toast.makeText(this,
+						resources.getString(R.string.noSubscribed),
+						Toast.LENGTH_LONG).show();
+				PBLogger.exit(TAG);
+
+			} else {
+
+				// Getting ready to call opportunities REST service...
+
+				OpportunityQueryParameterList listQueryParms = OpportunityListHelper
+						.buildParameterList(v.getContext(), cats, states, false);
+
+				Intent oppListIntent = new Intent(this,
+						OpportunityListActivity.class);
+				oppListIntent.putExtra(Constants.LIST_QUERY_PARMS,
+						listQueryParms);
+				updateLastUsage();
+
+				startActivity(oppListIntent);
+
+				PBLogger.exit(TAG);
+			}
 		}
 	}
 
@@ -181,15 +207,35 @@ public class HomeActivity extends Activity {
 		String TAG = className + ".updateLastUsage";
 		SharedPreferences preferences = PreferenceManager
 				.getDefaultSharedPreferences(this);
+		
+		
+		PBLogger.i(TAG, "before Usage update: " + preferences.getLong(Constants.lastUsage, Constants.BEGINNING_OF_TIME));
 		SharedPreferences.Editor editor = preferences.edit();
+		
 		editor.putLong(Constants.lastUsage, System.currentTimeMillis());
 		// Note: Preference has to be stored as Long, but we format it as String
 		// in the query (from PushSubscribed...).
 
 		PBLogger.i(TAG,
-				"Last usage time updated to: " + System.currentTimeMillis());
+				"Last usage time updated to: " + preferences.getLong(Constants.lastUsage, Constants.BEGINNING_OF_TIME));
 		editor.commit();
 
+	}
+
+	private ContactInfo getContactInfoFromPreferences() {
+		ContactInfo contactInfo = new ContactInfo();
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
+
+		contactInfo.setFirstName(prefs.getString(Constants.PREF_KEY_FIRSTNAME,
+				""));
+		contactInfo.setLastName(prefs
+				.getString(Constants.PREF_KEY_LASTNAME, ""));
+		contactInfo.setEmail(prefs.getString(Constants.PREF_KEY_EMAIL, ""));
+		contactInfo.setPhone(prefs.getString(Constants.PREF_KEY_PHONE, ""));
+		contactInfo.setFirmName(prefs.getString(Constants.PREF_KEY_FIRM, ""));
+
+		return contactInfo;
 	}
 
 }
