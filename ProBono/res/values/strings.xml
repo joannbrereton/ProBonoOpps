@@ -62,8 +62,9 @@
     <string name="browsePrefs">Browse all opportunities for preferred states and categories</string>
     <string name="probonopartnership">Pro Bono Partnership</string>
     <string name="title_activity_no_subscribed">No Subscriptions Found</string>
-    <string name="noSubscribed">You have not listed any preferred states or categories. \nVisit the Preferences menu to select states and categories that match the opportunities you would like to see. Use your menu button or menu indicator (...) to enter.</string>
-	<string name="noContactInfo">You have not yet entered your contact information. \nVisit the Preferences menu to enter your contact information.  Use your menu button or menu indicator (...) to enter.</string>
+    <string name="noSubscribedStates">You have not listed any preferred states. \nSelect states that match the opportunities you would like to see. Use your menu button or menu indicator (...) to re-visit.</string>
+    <string name="noSubscribedCats">You have not listed any preferred categories. \nSelect categories that match the opportunities you would like to see. Use your menu button or menu indicator (...) to re-visit.</string>
+	<string name="noContactInfo">You have not yet entered your contact information. \nPlease enter it now.  To revisit at any time, click the Menu button or indicator (...) and choose Preferences.</string>
     <string name="Yes">Yes</string>
     <string name="No">No</string>
     <string name="noResults">There are no opportunity results available matching the category(ies) or state(s) chosen. </string>

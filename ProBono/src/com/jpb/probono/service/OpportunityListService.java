@@ -93,9 +93,7 @@ public class OpportunityListService extends IntentService {
 						resources.getString(R.string.noResults),
 						Toast.LENGTH_LONG).show();
 			}
-			PBLogger.exit(TAG);
-
-			
+			PBLogger.exit(TAG);			
 		}
 
 		@Override

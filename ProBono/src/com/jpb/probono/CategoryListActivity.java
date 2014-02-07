@@ -52,13 +52,9 @@ public class CategoryListActivity extends Activity implements
 				android.R.layout.simple_list_item_1,
 				cats);
 		
-		if (itemlist == null)
-		{
-			//throw new PBException();
-			
-		}
-		else
-		{
+		if (itemlist == null || adapter == null) {
+			PBLogger.e(TAG, "null itemlist or adapter...itemlist = " + itemlist + " adapter " + adapter);
+		} else {		
 			itemlist.setAdapter(adapter);
 			itemlist.setSelection(0);
 			itemlist.setOnItemClickListener((OnItemClickListener) CategoryListActivity.this);

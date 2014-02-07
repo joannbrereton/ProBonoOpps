@@ -17,6 +17,7 @@ import android.widget.ListView;
 
 import com.jpb.probono.R;
 import com.jpb.probono.constants.Constants;
+import com.jpb.probono.utility.PBLogger;
 
 /**
  * 
@@ -36,6 +37,7 @@ import com.jpb.probono.constants.Constants;
  * 
  */
 public class ListPreferenceMultiSelect extends ListPreference {
+	private static final String className = "ListPreferenceMultiSelect";
 	private static final String parsingSeparator = Constants.SEPARATOR_REGEXP;
 	private static final String storedStringSeparator = Constants.PARAMETER_SEPARATOR;
 
@@ -44,8 +46,10 @@ public class ListPreferenceMultiSelect extends ListPreference {
 
 	// Constructor
 	@SuppressLint("Recycle")
-	public ListPreferenceMultiSelect(Context context, AttributeSet attrs) {
+	public ListPreferenceMultiSelect(Context context, AttributeSet attrs) {	
 		super(context, attrs);
+		String TAG = className + ".ListPreferenceMultiSelect";
+		PBLogger.entry(TAG);
 		TypedArray a = context.obtainStyledAttributes(attrs,
 				R.styleable.ListPreferenceMultiSelect);
 		checkAllKey = a
@@ -53,6 +57,8 @@ public class ListPreferenceMultiSelect extends ListPreference {
 
 		// Initialize the array of boolean to the same size as number of entries
 		mClickedDialogEntryIndices = new boolean[getEntries().length];
+		PBLogger.i(TAG, "mClickedDialogEntryIndices = " + mClickedDialogEntryIndices);
+		PBLogger.exit(TAG);
 	}
 
 	@Override
@@ -68,6 +74,8 @@ public class ListPreferenceMultiSelect extends ListPreference {
 
 	@Override
 	protected void onPrepareDialogBuilder(Builder builder) {
+		String TAG = className + ".onPrepareDialogBuilder";
+		PBLogger.entry(TAG);
 		CharSequence[] entries = getEntries();
 		CharSequence[] entryValues = getEntryValues();
 		if (entries == null || entryValues == null
@@ -81,12 +89,17 @@ public class ListPreferenceMultiSelect extends ListPreference {
 				new DialogInterface.OnMultiChoiceClickListener() {
 					public void onClick(DialogInterface dialog, int which,
 							boolean val) {
+						String TAG = "builder.onClick (innerClass)";
+						PBLogger.entry(TAG);
+						PBLogger.i(TAG, " isCheckAllValue(which) = " + isCheckAllValue(which));
 						if (isCheckAllValue(which) == true) {
 							checkAll(dialog, val);
 						}
 						mClickedDialogEntryIndices[which] = val;
+						PBLogger.i(TAG, "which = " + which + ", val = " + val);
 					}
 				});
+		PBLogger.exit(TAG);
 	}
 
 	private boolean isCheckAllValue(int which) {
@@ -107,6 +120,8 @@ public class ListPreferenceMultiSelect extends ListPreference {
 	}
 
 	public String getValuesAsString() {
+		String TAG = className + ".getValuesAsString";
+		PBLogger.entry(TAG);
 		StringBuffer sb = new StringBuffer("");
 		
 		for (int i = 0; i < this.mClickedDialogEntryIndices.length; i++) {
@@ -116,12 +131,11 @@ public class ListPreferenceMultiSelect extends ListPreference {
 							Constants.PARAMETER_SEPARATOR);
 			}
 		}
-		if (sb.length() == 0) {
-			return "";
-		} else
-		{
-			return sb.toString().substring(0, sb.length() - 1);
-		}
+		
+		PBLogger.i(TAG, "sb (return value cuts last character) = " + sb.toString());
+		PBLogger.exit(TAG);
+		return sb.length() == 0 ? "" : sb.toString().substring(0, sb.length() - 1);
+		
 	}
 
 	public String[] parseStoredValue(CharSequence val) {
@@ -133,11 +147,14 @@ public class ListPreferenceMultiSelect extends ListPreference {
 	}
 
 	private void restoreCheckedEntries() {
+		String TAG = className + ".restoreCheckedEntries";
+		PBLogger.entry(TAG);
 		CharSequence[] entryValues = getEntryValues();
 
 		// Explode the string read in sharedpreferences
 		String[] vals = parseStoredValue(getValue());
 
+		PBLogger.i(TAG, "vals= " + vals);
 		if (vals != null) {
 			List<String> valuesList = Arrays.asList(vals);
 			// for ( int j=0; j<vals.length; j++ ) {
@@ -153,14 +170,18 @@ public class ListPreferenceMultiSelect extends ListPreference {
 			}
 			// }
 		}
+		PBLogger.exit(TAG);
 	}
 
 	@Override
 	protected void onDialogClosed(boolean positiveResult) {
 		// super.onDialogClosed(positiveResult);
+		String TAG = className + ".onDialogClosed";
+		PBLogger.entry(TAG);
 		ArrayList<String> values = new ArrayList<String>();
 
 		CharSequence[] entryValues = getEntryValues();
+		PBLogger.i(TAG, "positiveResult = " + positiveResult + "entryValues = " + entryValues);
 		if (positiveResult && entryValues != null) {
 			for (int i = 0; i < entryValues.length; i++) {
 				if (mClickedDialogEntryIndices[i] == true) {
@@ -177,6 +198,8 @@ public class ListPreferenceMultiSelect extends ListPreference {
 				setValue(join(values, storedStringSeparator));
 			}
 		}
+		PBLogger.i(TAG, "at the end of method, values = " + values);
+		PBLogger.exit(TAG);
 	}
 
 	// Credits to kurellajunior on this post

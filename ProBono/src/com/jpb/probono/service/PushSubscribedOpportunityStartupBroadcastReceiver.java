@@ -28,7 +28,7 @@ import com.jpb.probono.utility.PBLogger;
 public class PushSubscribedOpportunityStartupBroadcastReceiver extends
 		BroadcastReceiver {
 	// Restart service every 30 seconds
-	public static final String className = "OpportunityStartupBroadcastReceiver";
+	public static final String className = "OpportunityStartupBR";
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -56,12 +56,12 @@ public class PushSubscribedOpportunityStartupBroadcastReceiver extends
 			// InexactRepeating allows Android to optimize the energy
 			// consumption
 			service.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-					cal.getTimeInMillis(), days * Constants.PUSH_REPEAT_TIME, pending);
+					cal.getTimeInMillis(), days * Constants.MILLISECONDS_IN_A_DAY, pending);
 
 			// service.setRepeating(AlarmManager.RTC_WAKEUP,
 			// cal.getTimeInMillis(),
 			// REPEAT_TIME, pending);
-			PBLogger.i(TAG, "timer set ");
+			PBLogger.i(TAG, "timer set to repeat every " + days + " days.");
 		}
 		else
 		{
