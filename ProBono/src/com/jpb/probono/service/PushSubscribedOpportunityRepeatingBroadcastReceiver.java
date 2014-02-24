@@ -2,7 +2,6 @@ package com.jpb.probono.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
@@ -76,7 +75,7 @@ public class PushSubscribedOpportunityRepeatingBroadcastReceiver extends
 
 	};
 
-	@SuppressWarnings({ "deprecation", "unchecked" })
+	@SuppressWarnings("deprecation")
 	private void notifyUserOfNewOpportunities(int size) {
 		String TAG = className + ".notifyUserOfNewOpportunities";
 
@@ -92,9 +91,9 @@ public class PushSubscribedOpportunityRepeatingBroadcastReceiver extends
 
 		HashMap<String, ?> prefMap = (HashMap<String, ?>) preferences.getAll();
 
-		HashSet<String> cats = (HashSet<String>) prefMap
+		String cats = (String) prefMap
 				.get(Constants.PREFERRED_CATEGORIES);
-		HashSet<String> states = (HashSet<String>) prefMap
+		String states = (String) prefMap
 				.get(Constants.PREFERRED_STATES);
 
 		PBLogger.i(TAG, "states = " + states + " cats = " + cats);
@@ -116,6 +115,7 @@ public class PushSubscribedOpportunityRepeatingBroadcastReceiver extends
 		// Send a notification
 		NotificationManager mgr = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
+		
 		Notification notification = new Notification(R.drawable.pbp1,
 				resources.getString(R.string.notification_title),
 				System.currentTimeMillis());
@@ -128,7 +128,6 @@ public class PushSubscribedOpportunityRepeatingBroadcastReceiver extends
 		PBLogger.i(TAG, "Notification sent.");
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		String TAG = className + ".onReceive";
@@ -167,9 +166,9 @@ public class PushSubscribedOpportunityRepeatingBroadcastReceiver extends
 			HashMap<String, ?> prefMap = (HashMap<String, ?>) preferences
 					.getAll();
 
-			HashSet<String> cats = (HashSet<String>) prefMap
+			String cats = (String) prefMap
 					.get(Constants.PREFERRED_CATEGORIES);
-			HashSet<String> states = (HashSet<String>) prefMap
+			String states = (String) prefMap
 					.get(Constants.PREFERRED_STATES);
 
 			PBLogger.i(TAG, "preparing parameter list with cats = " + cats + " states = " + states);

@@ -3,8 +3,8 @@ package com.jpb.probono.helper;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Locale;
+import java.util.StringTokenizer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,7 +15,6 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.jpb.probono.R;
 import com.jpb.probono.constants.Constants;
@@ -89,7 +88,7 @@ public class OpportunityListHelper {
 		return newJsonResponse;
 	}
 	
-	public static OpportunityQueryParameterList buildParameterList(Context context, HashSet<String> cats, HashSet<String> states,  boolean useSince) {
+	public static OpportunityQueryParameterList buildParameterList(Context context, String cats, String states,  boolean useSince) {
 		String TAG = className + ".buildParameterList";
 		PBLogger.i(TAG, "entry");
 		SharedPreferences preferences = PreferenceManager
@@ -105,8 +104,7 @@ public class OpportunityListHelper {
 		}
 		
 		String updatedSince = formatUpdatedSince(new Date(sinceLong));
-
-		
+	
 
 		PBLogger.i(TAG, "states = " + states + " cats = " + cats);
 
@@ -116,14 +114,15 @@ public class OpportunityListHelper {
 		
 		listQueryParms.setSince(updatedSince);
 		
-		
-		for (String state : states) {
-			listQueryParms.addState(state); // don't need name for now
+		StringTokenizer st = new StringTokenizer(states,"|");
+		while(st.hasMoreTokens()) {
+			listQueryParms.addState(st.nextToken()); // don't need name for now
 		}
 
-		
-		for (String cat : cats) {
-			listQueryParms.addCategory(cat); // don't need name for
+		st = new StringTokenizer(cats,"|");
+		while(st.hasMoreTokens())
+	 {
+			listQueryParms.addCategory(st.nextToken()); // don't need name for
 														// now
 		}
 		PBLogger.i(TAG,"returning listQueryParms = " + listQueryParms);

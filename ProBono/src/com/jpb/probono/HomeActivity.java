@@ -2,7 +2,6 @@ package com.jpb.probono;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -215,7 +214,6 @@ public class HomeActivity extends Activity {
 
 	}
 
-	@SuppressWarnings("unchecked")
 	public void doBrowseByPref(View v) {
 		String methodName = className + ".doBrowseByPref";
 		String TAG = className + methodName;
@@ -227,9 +225,9 @@ public class HomeActivity extends Activity {
 
 		HashMap<String, ?> prefMap = (HashMap<String, ?>) preferences.getAll();
 
-		HashSet<String> cats = (HashSet<String>) prefMap
+		String cats = (String) prefMap
 				.get(Constants.PREFERRED_CATEGORIES);
-		HashSet<String> states = (HashSet<String>) prefMap
+		String states = (String) prefMap
 				.get(Constants.PREFERRED_STATES);
 
 		PBLogger.i(TAG, "states = " + states + " cats = " + cats);
