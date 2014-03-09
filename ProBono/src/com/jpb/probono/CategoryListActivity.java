@@ -6,22 +6,34 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Messenger;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.jpb.probono.constants.Constants;
 import com.jpb.probono.exception.PBException;
+import com.jpb.probono.helper.CategoriesListHelper;
 import com.jpb.probono.rest.model.OpportunityCategory;
 import com.jpb.probono.rest.model.OpportunityQueryParameterList;
+import com.jpb.probono.service.CategoryListService;
 import com.jpb.probono.utility.PBLogger;
 
 public class CategoryListActivity extends Activity implements
@@ -37,9 +49,66 @@ public class CategoryListActivity extends Activity implements
 		PBLogger.entry(TAG);
 		super.onCreate(savedInstanceState);
 		
+		// prefetch Categories, call service. It comes back to handler.
+		Intent categoryListServiceIntent = new Intent(this, CategoryListService.class);
+		// Create a new Messenger for the communication back
+		Messenger messenger = new Messenger(categoriesHandler);
+		categoryListServiceIntent.putExtra(Constants.MESSENGER, messenger);
+		startService(categoryListServiceIntent);
+
+		
+	    PBLogger.exit(TAG);
+		
+	}
+	
+	
+	// Handler that handles the returned categories.
+		@SuppressLint("HandlerLeak")
+		private Handler categoriesHandler = new Handler() {
+			public void handleMessage(Message message) {
+				String TAG = className + ".handleMessage";
+				PBLogger.entry(TAG);
+				String json = (String) message.obj;
+				if (message.arg1 == RESULT_OK && json != null) {
+					try {
+						cats = CategoriesListHelper.parseCategoriesFromJson(
+								resources, json);
+						CategoryListActivity.this.loadCatsIntoPreferences(cats);
+						// OK...only now should we proceed to list the categories.
+						CategoryListActivity.this.showCategories(cats);
+						
+					} catch (PBException e) {
+						Toast.makeText(
+								CategoryListActivity.this,
+								resources
+										.getString(R.string.errorTryingToParseCategories),
+								Toast.LENGTH_LONG).show();
+						PBLogger.e(TAG, resources
+								.getString(R.string.errorTryingToParseCategories),
+								e);
+					}
+				} else {
+					Toast.makeText(
+							CategoryListActivity.this,
+							resources
+									.getString(R.string.errorTryingToGetCategoriesFromService),
+							Toast.LENGTH_LONG).show();
+					PBLogger.e(
+							TAG,
+							resources
+									.getString(R.string.errorTryingToGetCategoriesFromService));
+
+				}
+				PBLogger.exit(TAG);
+
+			}
+		};
+		
+	private void showCategories(ArrayList<OpportunityCategory> cats)
+	{
+		String TAG = className + ".showCategories";
+		PBLogger.entry(TAG);
 		setContentView(R.layout.activity_category_list);
-		Bundle b = getIntent().getExtras();
-		cats = b.getParcelableArrayList(Constants.CATEGORIES);
 		
 		// Grab resources - they will come in handy later.
 		if (resources == null)
@@ -47,6 +116,8 @@ public class CategoryListActivity extends Activity implements
 		
 		// Put all the categories into the list.
 		ListView itemlist = (ListView) findViewById(R.id.listCategory);
+		
+		// attach list click adapter.
 		ArrayAdapter<OpportunityCategory> adapter = new ArrayAdapter<OpportunityCategory>(
 				CategoryListActivity.this,
 				android.R.layout.simple_list_item_1,
@@ -59,8 +130,7 @@ public class CategoryListActivity extends Activity implements
 			itemlist.setSelection(0);
 			itemlist.setOnItemClickListener((OnItemClickListener) CategoryListActivity.this);
 		}
-		PBLogger.exit(TAG);
-		
+	
 	}
 
 	public static ArrayList<OpportunityCategory> parseCategories(
@@ -99,13 +169,32 @@ public class CategoryListActivity extends Activity implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		String TAG = className + ".onOptionsItemSelected";
-		Intent settingsActivity = new Intent(getBaseContext(),
-				SettingsActivity.class);
-		PBLogger.i(TAG,
-				"Setting Preferences Activity - settingsActivity = "
-						+ settingsActivity);
-		startActivity(settingsActivity);
+		String TAG = className + "onOptionsItemSelected";
+		PBLogger.entry(TAG);
+		Intent preferencesIntent = null;
+		switch (item.getItemId()) {
+		case R.id.menu_contact_preferences:
+			preferencesIntent = new Intent(getBaseContext(),
+					ContactPreferencesActivity.class);
+			break;
+			
+		case R.id.menu_subscription_preferences:
+			preferencesIntent = new Intent(getBaseContext(),
+					SubscriptionPreferencesActivity.class);
+		default:
+			PBLogger.w(TAG,
+					"No preferences matching itemId = " + item.getItemId());
+			break;
+
+		}
+		PBLogger.i(TAG, "Setting Preferences Activity -  = "
+				+ preferencesIntent);
+
+		if (preferencesIntent != null) {
+			startActivity(preferencesIntent);
+		}
+		PBLogger.exit(TAG);
+
 		return true;
 	}
 
@@ -128,6 +217,47 @@ public class CategoryListActivity extends Activity implements
 		startActivity(oppListIntent);
 		PBLogger.i(TAG,"exit");
 	}
+	
+//	private void showActivityOverlay() {
+//		final Dialog dialog = new Dialog(this,
+//				android.R.style.Theme_Translucent_NoTitleBar);
+//
+//		dialog.setContentView(R.layout.activity_overlay);
+//
+//		LinearLayout layout = (LinearLayout) dialog
+//				.findViewById(R.id.llOverlay_activity);
+//		layout.setBackgroundColor(Color.TRANSPARENT);
+//		layout.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View arg0) {
+//
+//				dialog.dismiss();
+//
+//			}
+//
+//			@Override
+//			public void onClick(DialogInterface dialog, int which) {
+//				this.onClick(CategoryListActivity.this.get);
+//				
+//			}
+//
+//			
+//
+//		});
+//
+//		dialog.show();
+//
+//	}
+	
+	
+	// TODO: Trying to figure out how to load the current list of categories
+	// into the PREFERENCES list.
+	private void loadCatsIntoPreferences(ArrayList<OpportunityCategory> cats) {
+		// SharedPreferences preferences = PreferenceManager
+		// .getDefaultSharedPreferences(this);
+		//
+	};
 
 	
 

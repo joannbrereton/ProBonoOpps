@@ -35,6 +35,72 @@ public class PushSubscribedOpportunityRepeatingBroadcastReceiver extends
 	private Context context = null;
 	private static String className = "OpportunityRptinBdcstRecvr";
 
+	// Start here....
+	@Override
+	public void onReceive(Context context, Intent intent) {
+		String TAG = className + ".onReceive";
+		PBLogger.entry(TAG);
+		this.context = context;
+
+		boolean preCheck = true;
+		// User has to have chosen preferred categories and states for this to
+		// work.
+		// If we don't pass this precheck, no query is attempted.
+		if (!PreferencesHelper.isCategoryChoiceReady(context)) {
+			PBLogger.i(TAG, resources.getString(R.string.noSubscribedCats));
+			preCheck = false;
+		}
+
+		if (!PreferencesHelper.isStateChoiceReady(context)) {
+			PBLogger.i(TAG, resources.getString(R.string.noSubscribedStates));
+			preCheck = false;
+		}
+
+		PBLogger.i(TAG,
+				"preCheck for calling opportunityListService from background = "
+						+ preCheck);
+		if (preCheck == true) {
+
+			resources = context.getResources();
+			Intent service = new Intent(context, OpportunityListService.class);
+
+			// Create a new Messenger for the communication back
+			// Pass in the listQueryParms....
+			// result comes back to handler
+			Messenger messenger = new Messenger(oppsHandler);
+			service.putExtra(Constants.MESSENGER, messenger);
+
+			SharedPreferences preferences = PreferenceManager
+					.getDefaultSharedPreferences(context);
+
+			String cats = null;
+			String states = null;
+
+			HashMap<String, ?> prefMap = (HashMap<String, ?>) preferences
+					.getAll();
+
+			cats = (String) prefMap.get(Constants.PREFERRED_CATEGORIES);
+			states = (String) prefMap.get(Constants.PREFERRED_STATES);
+
+			PBLogger.i(TAG, "preparing parameter list with cats = " + cats
+					+ " states = " + states);
+
+			OpportunityQueryParameterList parameterList = OpportunityListHelper
+					.buildParameterList(this.context, cats, states, true);
+
+			// put the parameterlist containing the preferred cats and states into the service bundle.
+			service.putExtra(Constants.LIST_QUERY_PARMS, parameterList);
+			PBLogger.i(TAG, "About to start service with parameterList ="
+					+ parameterList);
+
+			// Call the service that queries for opportunities according to preferred cats and states.
+			// The return message will be handled via the oppsHandler defined below.  
+			context.startService(service);
+
+		}
+		PBLogger.exit(TAG);
+	}
+
 	// Query result comes back to here from service.
 	private Handler oppsHandler = new Handler() {
 		public void handleMessage(Message message) {
@@ -63,6 +129,7 @@ public class PushSubscribedOpportunityRepeatingBroadcastReceiver extends
 					e.printStackTrace();
 				}
 
+				// Notify the user if more than one opportunity has returned.  
 				if (opps != null && opps.size() > 0) {
 					notifyUserOfNewOpportunities(opps.size());
 				}
@@ -75,114 +142,63 @@ public class PushSubscribedOpportunityRepeatingBroadcastReceiver extends
 
 	};
 
+	// Notify the user of new opportunities (re-runs the query, when user clicks).
 	@SuppressWarnings("deprecation")
 	private void notifyUserOfNewOpportunities(int size) {
 		String TAG = className + ".notifyUserOfNewOpportunities";
 
 		PBLogger.i(TAG, "There are " + size + " new opportunities found.");
-		Intent i = new Intent(
+		Intent oppListIntent = new Intent(
 				PushSubscribedOpportunityRepeatingBroadcastReceiver.this.context,
 				OpportunityListActivity.class);
-		
+
 		// Add in arguments
 
 		SharedPreferences preferences = PreferenceManager
 				.getDefaultSharedPreferences(this.context);
 
-		HashMap<String, ?> prefMap = (HashMap<String, ?>) preferences.getAll();
+		String cats = null;
+		String states = null;
 
-		String cats = (String) prefMap
-				.get(Constants.PREFERRED_CATEGORIES);
-		String states = (String) prefMap
-				.get(Constants.PREFERRED_STATES);
+		if (preferences != null) {
+			HashMap<String, ?> prefMap = (HashMap<String, ?>) preferences
+					.getAll();
+
+			if (prefMap != null) {
+				cats = (String) prefMap.get(Constants.PREFERRED_CATEGORIES);
+				states = (String) prefMap.get(Constants.PREFERRED_STATES);
+			}
+		}
 
 		PBLogger.i(TAG, "states = " + states + " cats = " + cats);
 
-		// Getting ready to call opportunities REST service...
+		// Getting ready to call opportunities REST service...build the parameters
 
 		OpportunityQueryParameterList listQueryParms = OpportunityListHelper
-				.buildParameterList(this.context, cats, states, false);
+				.buildParameterList(this.context, cats, states, true);
+		oppListIntent.putExtra(Constants.LIST_QUERY_PARMS, listQueryParms);
 
-		i.putExtra(Constants.LIST_QUERY_PARMS, listQueryParms);
-		//i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		
+		// Build a PendingIntent...this intent will run when user clicks the notification.
+		// It lists the opportunities for the preferred categories and states.   
 		PendingIntent pIntent = PendingIntent
 				.getActivity(
 						PushSubscribedOpportunityRepeatingBroadcastReceiver.this.context,
-						0, i, PendingIntent.FLAG_CANCEL_CURRENT);
-
+						0, oppListIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
 		// Send a notification
 		NotificationManager mgr = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
-		
+
 		Notification notification = new Notification(R.drawable.pbp1,
 				resources.getString(R.string.notification_title),
 				System.currentTimeMillis());
-		// Set the Notification Info
+				
 		notification.setLatestEventInfo(context,
 				resources.getString(R.string.notification_title),
 				resources.getString(R.string.notification_text), pIntent);
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		mgr.notify(0, notification);
 		PBLogger.i(TAG, "Notification sent.");
-	}
-
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		String TAG = className + ".onReceive";
-		PBLogger.entry(TAG);
-		this.context = context;
-
-		boolean preCheck = true;
-		// User has to have chosen preferred categories and states for this to
-		// work.
-		// If we don't pass this precheck, no query is attempted.
-		if (!PreferencesHelper.isCategoryChoiceReady(context)) {
-			PBLogger.i(TAG, resources.getString(R.string.noSubscribedCats));
-			preCheck = false;
-		}
-
-		if (!PreferencesHelper.isStateChoiceReady(context)) {
-			PBLogger.i(TAG, resources.getString(R.string.noSubscribedStates));
-			preCheck = false;
-		}
-
-		PBLogger.i(TAG, "preCheck for calling opportunityListService from background = " + preCheck);
-		if (preCheck == true) {
-			
-			resources = context.getResources();
-			Intent service = new Intent(context, OpportunityListService.class);
-
-			// Create a new Messenger for the communication back
-			// Pass in the listQueryParms....
-			// result comes back to handler
-			Messenger messenger = new Messenger(oppsHandler);
-			service.putExtra(Constants.MESSENGER, messenger);
-
-			SharedPreferences preferences = PreferenceManager
-					.getDefaultSharedPreferences(context);
-
-			HashMap<String, ?> prefMap = (HashMap<String, ?>) preferences
-					.getAll();
-
-			String cats = (String) prefMap
-					.get(Constants.PREFERRED_CATEGORIES);
-			String states = (String) prefMap
-					.get(Constants.PREFERRED_STATES);
-
-			PBLogger.i(TAG, "preparing parameter list with cats = " + cats + " states = " + states);
-
-			OpportunityQueryParameterList parameterList = OpportunityListHelper
-					.buildParameterList(this.context, cats, states, true);
-
-			service.putExtra(Constants.LIST_QUERY_PARMS, parameterList);
-			PBLogger.i(TAG, "About to start service with parameterList ="
-					+ parameterList);
-
-			context.startService(service);
-		}
-		PBLogger.exit(TAG);
 	}
 
 }
