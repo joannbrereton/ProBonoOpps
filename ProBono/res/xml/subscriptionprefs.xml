@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+      <PreferenceCategory android:title="@string/userPushPreferences" >
+        <ListPreference
+            android:entries="@array/syncFrequency"
+            android:entryValues="@array/syncFrequencyValues"
+            android:key="prefSyncFrequency"
+            android:title="@string/pref_sync_frequency" />
+    </PreferenceCategory>  
+     
+     <PreferenceCategory android:title="@string/userQueryPreferences" >
+		<MultiSelectListPreference
+        	android:title="@string/preferredCategories"
+        	android:entries="@array/category_names"
+        	android:entryValues="@array/category_values"
+        	android:key="preferredCategories"
+           
+        />
+       <MultiSelectListPreference
+        	android:title="@string/preferredStates"
+        	android:entries="@array/state_names"
+        	android:entryValues="@array/state_values"
+        	android:key="preferredStates"
+        />
+       
+        
+    </PreferenceCategory>
+    
+   
+
+</PreferenceScreen>

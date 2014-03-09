@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceCategory android:title="@string/userProfilePreferences" >
+        <EditTextPreference
+            android:defaultValue=""
+            android:dialogTitle="@string/dialog_title_FirstName_preference"
+            android:key="firstName_preference"
+            android:summary="@string/summary_firstName_preference"
+            android:title="@string/title_firstName_preference" />
+        <EditTextPreference
+            android:defaultValue=""
+            android:dialogTitle="@string/dialog_title_lastName_preference"
+            android:key="lastName_preference"
+            android:summary="@string/summary_lastName_preference"
+            android:title="@string/title_lastName_preference" />
+        <EditTextPreference
+            android:defaultValue=""
+            android:dialogTitle="@string/dialog_title_email_preference"
+            android:key="email_preference"
+            android:summary="@string/summary_email_preference"
+            android:title="@string/title_email_preference" />
+        <EditTextPreference
+            android:defaultValue=""
+            android:dialogTitle="@string/dialog_title_firm_preference"
+            android:key="firm_preference"
+            android:summary="@string/summary_firm_preference"
+            android:title="@string/title_firm_preference" />
+        <EditTextPreference
+            android:defaultValue=""
+            android:dialogTitle="@string/dialog_title_telephone_preference"
+            android:key="telephone_number"
+            android:summary="@string/summary_telephone_number_preference"
+            android:title="@string/title_telephone_number_preference" />
+    </PreferenceCategory>
+    
+</PreferenceScreen>
