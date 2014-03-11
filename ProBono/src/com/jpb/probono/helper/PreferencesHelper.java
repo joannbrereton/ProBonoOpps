@@ -1,5 +1,6 @@
 package com.jpb.probono.helper;
 
+import java.util.Date;
 import java.util.HashMap;
 
 import android.content.Context;
@@ -92,6 +93,15 @@ public class PreferencesHelper {
 
 	public static boolean isSubscribed(Context context) {
 			return false;
+	}
+
+	public static void setUpdatedSince(Context context) {
+		
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putLong(Constants.lastUsage, new Date(/*NOW*/).getTime());
+		editor.commit();
+		
 	}
 
 }

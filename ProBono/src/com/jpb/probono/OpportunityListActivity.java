@@ -13,6 +13,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
 import android.util.SparseBooleanArray;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -201,7 +203,6 @@ public class OpportunityListActivity extends Activity implements
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		// TODO Auto-generated method stub
 		String TAG = "onItemClick";
 		PBLogger.entry(TAG);
 		String selected = "";
@@ -225,5 +226,42 @@ public class OpportunityListActivity extends Activity implements
 				Toast.LENGTH_LONG).show();
 
 		PBLogger.exit(TAG);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.preferences_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		String TAG = className + "onOptionsItemSelected";
+		PBLogger.entry(TAG);
+		Intent preferencesIntent = null;
+		switch (item.getItemId()) {
+		case R.id.menu_contact_preferences:
+			preferencesIntent = new Intent(getBaseContext(),
+					ContactPreferencesActivity.class);
+			break;
+
+		case R.id.menu_subscription_preferences:
+			preferencesIntent = new Intent(getBaseContext(),
+					SubscriptionPreferencesActivity.class);
+		default:
+			PBLogger.w(TAG,
+					"No preferences matching itemId = " + item.getItemId());
+			break;
+
+		}
+		PBLogger.i(TAG, "Setting Preferences Activity -  = "
+				+ preferencesIntent);
+
+		if (preferencesIntent != null) {
+			startActivity(preferencesIntent);
+		}
+		PBLogger.exit(TAG);
+
+		return true;
 	}
 }

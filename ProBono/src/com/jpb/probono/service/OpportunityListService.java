@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.jpb.probono.R;
 import com.jpb.probono.constants.Constants;
 import com.jpb.probono.exception.PBException;
+import com.jpb.probono.helper.PreferencesHelper;
 import com.jpb.probono.rest.model.OpportunityQueryParameterList;
 import com.jpb.probono.utility.PBLogger;
 import com.jpb.probono.utility.RestClient;

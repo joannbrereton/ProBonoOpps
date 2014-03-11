@@ -198,6 +198,9 @@ public class PushSubscribedOpportunityRepeatingBroadcastReceiver extends
 				resources.getString(R.string.notification_text), pIntent);
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		mgr.notify(0, notification);
+		// Change updatedSince to today
+		PreferencesHelper.setUpdatedSince(context); 
+
 		PBLogger.i(TAG, "Notification sent.");
 	}
 
