@@ -125,5 +125,9 @@ public class ContactInfo implements Serializable  {
 		return isValid;
 	}
 
+	public String toString()
+	{
+		return "firstName = " + firstName + " lastName = " + lastName + " firmName = " + firmName + " email = " + email + " phone " + phone;
+	}
 	
 }

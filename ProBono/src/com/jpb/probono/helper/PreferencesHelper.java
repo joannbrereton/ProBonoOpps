@@ -11,14 +11,20 @@ import com.jpb.probono.rest.model.ContactInfo;
 import com.jpb.probono.utility.PBLogger;
 
 public class PreferencesHelper {
-	private static final String className = "PreferenceHelper";
+	private static final String className = "PrefHelper";
 
 	public static boolean isContactInfoReady(Context context) {
+		String TAG = "isContactInfoReady";
+		PBLogger.entry(TAG);
 		ContactInfo contactInfo = getContactInfoFromPreferences(context);
+		PBLogger.i(TAG, "contactInfo = " + contactInfo);
 		boolean ready = false;
 		if (contactInfo.getEmail() != null && !contactInfo.getEmail().isEmpty()) {
 			ready = true;
 		}
+		PBLogger.i(TAG, "ContactInfo ready = " + ready);
+		PBLogger.exit(TAG);
+		
 		return ready;
 	}
 
@@ -46,7 +52,7 @@ public class PreferencesHelper {
 	}
 
 	public static boolean isCategoryChoiceReady(Context context) {
-		String TAG = className + ".isStateChoiceReady";
+		String TAG = className + ".isCategoryChoiceReady";
 		boolean ready = false;
 		SharedPreferences preferences = PreferenceManager
 				.getDefaultSharedPreferences(context);
@@ -66,6 +72,8 @@ public class PreferencesHelper {
 	}
 
 	public static ContactInfo getContactInfoFromPreferences(Context context) {
+		String TAG = "getContactInfoPref";
+		PBLogger.entry(TAG);
 		ContactInfo contactInfo = new ContactInfo();
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(context);
@@ -77,7 +85,8 @@ public class PreferencesHelper {
 		contactInfo.setEmail(prefs.getString(Constants.PREF_KEY_EMAIL, ""));
 		contactInfo.setPhone(prefs.getString(Constants.PREF_KEY_PHONE, ""));
 		contactInfo.setFirmName(prefs.getString(Constants.PREF_KEY_FIRM, ""));
-
+		PBLogger.i(TAG,"ContactInfo = " + contactInfo);
+		PBLogger.exit(TAG);
 		return contactInfo;
 	}
 

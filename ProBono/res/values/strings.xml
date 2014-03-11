@@ -63,6 +63,7 @@
     <string name="title_activity_home">ProBono Opportunities</string>
     <string name="browseAll">Browse all opportunities by category</string>
     <string name="browsePrefs">Browse all opportunities for preferred states and categories</string>
+    <string name="btn_proceed">Proceed</string>
     <string name="probonopartnership">Pro Bono Partnership</string>
     <string name="title_activity_no_subscribed">No Subscriptions Found</string>
     <string name="noSubscribedStates">You have not listed any preferred states. \nSelect states that match the opportunities you would like to see. Use your menu button or menu indicator (...) to re-visit.</string>

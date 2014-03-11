@@ -52,7 +52,7 @@ public class Constants {
 	public static final long BEGINNING_OF_TIME = 0;  // store Date as Long.
 	public static final long MILLISECONDS_IN_A_DAY = 1000 * 60 * 60 * 24; // once per day
 	public static final String DATE_SINCE_FORMAT_PATTERN = "yyyy/MM/dd";
-	public static final int MAX_LENGTH_FOR_LOGGING = 23;
+	public static final int MAX_LENGTH_FOR_LOGGING = 30;
 	
 	public static final String PREF_KEY_FIRSTNAME = "firstName_preference";
 	public static final String PREF_KEY_LASTNAME  = "lastName_preference";
@@ -81,7 +81,6 @@ public class Constants {
 	public static final String ROBOT_CONSTANT = "5";
 	public static final String SUBMIT_WORD = "Submit";
 	
-	
-
+	public static final String TAG = "ProBono";
 		
 }
